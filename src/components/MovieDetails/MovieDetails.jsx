@@ -23,6 +23,12 @@ function MovieDetails() {
       <h1>{movie.title}</h1>
       <img src={movie.poster}></img>
       <p>{movie.description}</p>
+      <ul>
+        Genres:
+        {movie.genres.map((genre) => (
+          <li>{genre}</li>
+        ))}
+      </ul>
     </>
   );
 }

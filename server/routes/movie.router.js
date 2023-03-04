@@ -16,15 +16,24 @@ router.get("/", (req, res) => {
 });
 
 // GET endpoint for individual movie
+// also include genres
 router.get("/:id", (req, res) => {
-  const queryText = `SELECT * FROM movies WHERE id = $1`;
+  const queryText = `SELECT movies.id, title, poster, description, name FROM movies
+                    JOIN movies_genres ON movies.id = movies_genres.movie_id
+                    JOIN genres ON movies_genres.genre_id = genres.id
+                    WHERE movies.id = $1`;
   const queryParams = [req.params.id];
 
   pool
     .query(queryText, queryParams)
     .then((result) => {
-      console.log("sending individual movie:", result.rows);
-      res.send(result.rows);
+      // create array of genres
+      const movieGenreList = result.rows.map((element) => element.name);
+      // add it as a property to the object being sent
+      result.rows[0].genres = movieGenreList;
+      // remove the name property
+      delete result.rows[0].name;
+      res.send(result.rows[0]);
     })
     .catch((err) => {
       console.log("Failed to execute SQL query", queryText, " : ", err);
