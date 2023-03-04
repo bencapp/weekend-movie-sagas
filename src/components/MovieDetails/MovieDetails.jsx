@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
 
 function MovieDetails() {
   // id of movie to display
@@ -8,7 +9,9 @@ function MovieDetails() {
   const dispatch = useDispatch();
 
   // get individual movie from server based on ID
-  dispatch({ type: "FETCH_MOVIE", payload: id });
+  useEffect(() => {
+    dispatch({ type: "FETCH_MOVIE", payload: id });
+  }, []);
 
   const movie = useSelector((store) => store.movieToDisplay);
   console.log(movie);
