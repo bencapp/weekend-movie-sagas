@@ -21,7 +21,7 @@ function MovieList() {
             <div key={movie.id}>
               <h3>{movie.title}</h3>
               <img
-                onClick={() => history.push(`/${movie.id}`)}
+                onClick={() => history.push(`/movie/${movie.id}`)}
                 src={movie.poster}
                 alt={movie.title}
               />

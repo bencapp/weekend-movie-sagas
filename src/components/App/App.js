@@ -2,22 +2,28 @@ import { HashRouter as Router, Route } from "react-router-dom";
 import "./App.css";
 import MovieList from "../MovieList/MovieList";
 import MovieDetails from "../MovieDetails/MovieDetails";
+import NavBar from "../NavBar/NavBar";
+import MovieForm from "../MovieForm/MovieForm";
 
 function App() {
   return (
     <div className="App">
-      <h1>The Movies Saga!</h1>
       <Router>
+        <NavBar />
+
         <Route path="/" exact>
           <MovieList />
         </Route>
 
-        {/* Route for each movie details page, passing id as a parameter */}
-        <Route path="/:id" exact>
-          <MovieDetails />
+        {/* Add Movie page */}
+        <Route path="/addMovie" exact>
+          <MovieForm />
         </Route>
 
-        {/* Add Movie page */}
+        {/* Route for each movie details page, passing id as a parameter */}
+        <Route path="/movie/:id" exact>
+          <MovieDetails />
+        </Route>
       </Router>
     </div>
   );
