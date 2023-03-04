@@ -10,7 +10,6 @@ function MovieForm() {
   }, []);
 
   const genres = useSelector((store) => store.genres);
-  console.log(genres);
 
   return (
     <form>
@@ -18,7 +17,8 @@ function MovieForm() {
       <input type="text" placeholder="Image url" />
       <textarea placeholder="description" />
       <select>
-        {genres && genres.map((genre) => <option>{genre}</option>)}
+        {genres &&
+          genres.map((genre) => <option key={genre.id}>{genre.name}</option>)}
       </select>
       <button type="submit">ADD</button>
     </form>
