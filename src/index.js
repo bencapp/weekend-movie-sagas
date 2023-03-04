@@ -77,6 +77,7 @@ const movieToDisplay = (state = {}, action) => {
 const storeInstance = createStore(
   combineReducers({
     movies,
+    movieToDisplay,
     genres,
   }),
   // Add sagaMiddleware to our store

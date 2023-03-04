@@ -8,12 +8,10 @@ function MovieDetails() {
   const dispatch = useDispatch();
 
   // get individual movie from server based on ID
-  dispatchEvent();
+  dispatch({ type: "FETCH_MOVIE", payload: id });
 
-  list;
-  const movies = useSelector((store) => store.movies);
-  console.log(movies);
-  console.log(id);
+  const movie = useSelector((store) => store.movieToDisplay);
+  console.log(movie);
   return <h1>Details</h1>;
 }
 
