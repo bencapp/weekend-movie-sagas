@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 
@@ -7,6 +7,7 @@ function MovieDetails() {
   const { id } = useParams();
 
   const dispatch = useDispatch();
+  const history = useHistory();
 
   // get individual movie from server based on ID
   // include id as part of dependency array so that page will re-render
@@ -29,6 +30,7 @@ function MovieDetails() {
           <li>{genre}</li>
         ))}
       </ul>
+      <button onClick={() => history.push("/")}>Back To List</button>
     </>
   );
 }
