@@ -18,7 +18,13 @@ function MovieDetails() {
   }, [id]);
 
   const movie = useSelector((store) => store.movieToDisplay);
-  console.log(movie);
+
+  const handleDelete = () => {
+    // dispatch to SAGA
+    dispatch({ type: "DELETE_MOVIE", payload: id });
+    // go back to the main page
+    history.push("/");
+  };
   return (
     <>
       <h1>{movie.title}</h1>
@@ -30,6 +36,7 @@ function MovieDetails() {
           movie.genres.map((genre, i) => <li key={i}>{genre}</li>)}
       </ul>
       <button onClick={() => history.push("/")}>Back To List</button>
+      <button onClick={handleDelete}>DELETE MOVIE</button>
     </>
   );
 }

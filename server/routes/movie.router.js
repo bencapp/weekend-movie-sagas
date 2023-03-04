@@ -86,4 +86,33 @@ router.post("/", (req, res) => {
     });
 });
 
+// DELETE endpoint, payload is the movie id
+router.delete("/:id", (req, res) => {
+  const queryText = `DELETE FROM movies_genres WHERE movie_id = $1`;
+  const queryParams = [req.params.id];
+  pool
+    .query(queryText, queryParams)
+    .then((result) => {
+      // complete another delete query within the first
+      const movieDeleteQuery = `DELETE FROM movies WHERE id = $1`;
+
+      pool
+        .query(movieDeleteQuery, queryParams)
+        .then((result) => res.sendStatus(204))
+        .catch((err) => {
+          console.log(
+            "Failed to execute SQL query",
+            movieDeleteQuery,
+            " : ",
+            err
+          );
+          res.sendStatus(500);
+        });
+    })
+    .catch((err) => {
+      console.log("Failed to execute SQL query", queryText, " : ", err);
+      res.sendStatus(500);
+    });
+});
+
 module.exports = router;
