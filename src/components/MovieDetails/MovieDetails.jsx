@@ -26,9 +26,8 @@ function MovieDetails() {
       <p>{movie.description}</p>
       <ul>
         Genres:
-        {movie.genres.map((genre) => (
-          <li>{genre}</li>
-        ))}
+        {movie.genres &&
+          movie.genres.map((genre, i) => <li key={i}>{genre}</li>)}
       </ul>
       <button onClick={() => history.push("/")}>Back To List</button>
     </>
