@@ -9,13 +9,22 @@ function MovieDetails() {
   const dispatch = useDispatch();
 
   // get individual movie from server based on ID
+  // include id as part of dependency array so that page will re-render
+  // on id change
   useEffect(() => {
+    console.log("changed movie details view");
     dispatch({ type: "FETCH_MOVIE", payload: id });
-  }, []);
+  }, [id]);
 
   const movie = useSelector((store) => store.movieToDisplay);
   console.log(movie);
-  return <h1>Details</h1>;
+  return (
+    <>
+      <h1>{movie.title}</h1>
+      <img src={movie.poster}></img>
+      <p>{movie.description}</p>
+    </>
+  );
 }
 
 export default MovieDetails;
