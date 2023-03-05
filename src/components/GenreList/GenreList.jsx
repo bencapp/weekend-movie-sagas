@@ -1,6 +1,16 @@
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+
 function GenreList() {
-  const genres = [1, 2, 3];
+  const dispatch = useDispatch();
+
+  const genres = useSelector((store) => store.genres);
+
   //
+  useEffect(() => {
+    dispatch({ type: "FETCH_GENRES" });
+  }, []);
+
   return (
     <ul>
       {genres.map((genre) => (
