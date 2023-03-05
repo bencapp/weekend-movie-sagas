@@ -13,7 +13,6 @@ function MovieDetails() {
   // include id as part of dependency array so that page will re-render
   // on id change
   useEffect(() => {
-    console.log("changed movie details view");
     dispatch({ type: "FETCH_MOVIE", payload: id });
   }, [id]);
 
@@ -36,6 +35,7 @@ function MovieDetails() {
           movie.genres.map((genre, i) => <li key={i}>{genre}</li>)}
       </ul>
       <button onClick={() => history.push("/")}>Back To List</button>
+      <button onClick={() => history.push(`/edit/${id}`)}>EDIT MOVIE</button>
       <button onClick={handleDelete}>DELETE MOVIE</button>
     </>
   );
