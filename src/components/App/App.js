@@ -4,6 +4,7 @@ import MovieList from "../MovieList/MovieList";
 import MovieDetails from "../MovieDetails/MovieDetails";
 import NavBar from "../NavBar/NavBar";
 import MovieForm from "../MovieForm/MovieForm";
+import EditMovie from "../EditMovie/EditMovie";
 
 function App() {
   return (
@@ -23,6 +24,11 @@ function App() {
         {/* Route for each movie details page, passing id as a parameter */}
         <Route path="/movie/:id" exact>
           <MovieDetails />
+        </Route>
+
+        {/* Route for each movie edit page, passing id as a parameter */}
+        <Route path="/edit/:id" exact>
+          <EditMovie />
         </Route>
       </Router>
     </div>
