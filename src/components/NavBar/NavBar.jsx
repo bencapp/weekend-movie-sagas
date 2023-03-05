@@ -1,6 +1,7 @@
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Button, ButtonGroup } from "@mui/material";
+import SearchForm from "./SearchForm/SearchForm";
 import "./NavBar.css";
 
 // NAV element: buttons for site navigation and title
@@ -24,6 +25,7 @@ function NavBar() {
         <Button onClick={() => history.push("/addMovie")}>Add Movie</Button>
         <Button onClick={handleRandom}>Random Movie</Button>
       </ButtonGroup>
+      <SearchForm />
     </div>
   );
 }

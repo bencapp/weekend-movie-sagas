@@ -3,20 +3,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import "./MovieList.css";
 import GenreList from "./GenreList/GenreList";
-import SearchForm from "./SearchForm/SearchForm";
 
 function MovieList() {
   const dispatch = useDispatch();
   const history = useHistory();
   const movies = useSelector((store) => store.movies);
 
-  const [moviesToDisplay, setMoviesToDisplay] = useState(movies);
+  const [moviesToDisplay, setMoviesToDisplay] = useState();
 
   // param for search query
   const { query } = useParams();
 
   useEffect(() => {
+    console.log("in useEffect");
     dispatch({ type: "FETCH_MOVIES" });
+    console.log(moviesToDisplay);
     // logic for editing movies to display based on search query
     // only begin if there is a search query
 
@@ -32,29 +33,30 @@ function MovieList() {
               .includes(query || query.toLowerCase())
         )
       );
+    } else {
+      setMoviesToDisplay(movies);
     }
-  }, []);
+  }, [query]);
 
-  console.log(query);
-
+  console.log(moviesToDisplay);
   return (
     <>
-      <SearchForm />
       <main>
         <h1>MovieList</h1>
         <section className="movies">
-          {moviesToDisplay.map((movie) => {
-            return (
-              <div key={movie.id}>
-                <h3>{movie.title}</h3>
-                <img
-                  onClick={() => history.push(`/movie/${movie.id}`)}
-                  src={movie.poster}
-                  alt={movie.title}
-                />
-              </div>
-            );
-          })}
+          {moviesToDisplay &&
+            moviesToDisplay.map((movie) => {
+              return (
+                <div key={movie.id}>
+                  <h3>{movie.title}</h3>
+                  <img
+                    onClick={() => history.push(`/movie/${movie.id}`)}
+                    src={movie.poster}
+                    alt={movie.title}
+                  />
+                </div>
+              );
+            })}
         </section>
       </main>
       <GenreList />

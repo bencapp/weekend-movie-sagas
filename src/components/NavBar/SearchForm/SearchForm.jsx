@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
+import { TextField, Button } from "@mui/material";
+import "./SearchForm.css";
 
 function SearchForm() {
   const history = useHistory();
@@ -13,13 +15,14 @@ function SearchForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
+    <form id="search-form" onSubmit={handleSubmit}>
+      <TextField
+        size="small"
         value={searchQuery}
         onChange={(event) => setSearchQuery(event.target.value)}
-        placeholder="Search"
-      ></input>
-      <button type="submit">GO</button>
+        label="Search for a Movie"
+      ></TextField>
+      <Button type="submit">GO</Button>
     </form>
   );
 }
