@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
+import { FormControlLabel, Checkbox } from "@mui/material";
 
 // movie prop is the movie to edit
 function EditMovie() {
@@ -10,27 +11,37 @@ function EditMovie() {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const [movieTitle, setMovieTitle] = useState();
-  const [movieDescription, setMovieDescription] = useState();
-
   const movie = useSelector((store) => store.movieToDisplay);
+  const genres = useSelector((store) => store.genres);
+  const movieBeingUpdated = useSelector((store) => store.movieBeingUpdated);
 
   // get individual movie from server based on ID
   // include id as part of dependency array so that page will re-render
   // on id change
   useEffect(() => {
-    console.log("in useEffect");
     dispatch({ type: "FETCH_MOVIE", payload: id });
-    setMovieTitle(movie.title);
-    setMovieDescription(movie.description);
-  }, [id]);
-
-  console.log("displaying movie:", movie);
+    dispatch({ type: "FETCH_GENRES" });
+    // dispatch current movie info to movieBeingUpdated
+    // dispatch movie with genres represented by their ids
+    dispatch({
+      type: "SET_MOVIE_BEING_UPDATED",
+      payload: {
+        ...movie,
+        genres: movie.genres.map((movieGenre) => {
+          for (let genre of genres) {
+            if (genre.name == movieGenre) {
+              return genre.id;
+            }
+          }
+        }),
+      },
+    });
+  }, []);
 
   const handleSubmit = () => {
     dispatch({
       type: "UPDATE_MOVIE",
-      payload: { id: id, title: movieTitle, description: movieDescription },
+      payload: movieBeingUpdated,
     });
     history.push(`/movie/${id}`);
   };
@@ -38,15 +49,52 @@ function EditMovie() {
   return (
     <form onSubmit={handleSubmit}>
       <textarea
-        defaultValue={movie.title}
-        value={movieTitle}
-        onChange={(event) => setMovieTitle(event.target.value)}
+        value={movieBeingUpdated.title}
+        onChange={(event) =>
+          dispatch({
+            type: "SET_MOVIE_BEING_UPDATED",
+            payload: { ...movieBeingUpdated, title: event.target.value },
+          })
+        }
       ></textarea>
       <textarea
-        defaultValue={movie.description}
-        value={movieDescription}
-        onChange={(event) => setMovieDescription(event.target.value)}
+        value={movieBeingUpdated.description}
+        onChange={(event) =>
+          dispatch({
+            type: "SET_MOVIE_BEING_UPDATED",
+            payload: { ...movieBeingUpdated, description: event.target.value },
+          })
+        }
       ></textarea>
+      {genres &&
+        genres.map((genre) => (
+          <FormControlLabel
+            key={genre.id}
+            control={
+              <Checkbox
+                defaultChecked={movie.genres.includes(genre.name)}
+                onChange={(event) => {
+                  console.log("seeing check change, event is", event);
+                  // boolean for whether it is checked or not: event.target.checked
+
+                  dispatch({
+                    type: "SET_MOVIE_BEING_UPDATED",
+                    payload: {
+                      ...movieBeingUpdated,
+                      // if field is checked, add it to the list. if unchecked, remove from list
+                      genres: event.target.checked
+                        ? [...movieBeingUpdated.genres, genre.id]
+                        : movieBeingUpdated.genres.filter(
+                            (movieGenre) => movieGenre != genre.id
+                          ),
+                    },
+                  });
+                }}
+              />
+            }
+            label={genre.name}
+          />
+        ))}
       <button type="submit">SUBMIT CHANGES</button>
     </form>
   );

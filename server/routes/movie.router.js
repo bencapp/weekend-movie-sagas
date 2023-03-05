@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../modules/pool");
+const format = require("pg-format");
 
 router.get("/", (req, res) => {
   const query = `SELECT * FROM movies ORDER BY "title" ASC`;
@@ -18,10 +19,11 @@ router.get("/", (req, res) => {
 // GET endpoint for individual movie
 // also include genres
 router.get("/:id", (req, res) => {
-  const queryText = `SELECT movies.id, title, poster, description, name FROM movies
-                    JOIN movies_genres ON movies.id = movies_genres.movie_id
-                    JOIN genres ON movies_genres.genre_id = genres.id
-                    WHERE movies.id = $1`;
+  const queryText = `SELECT movies.id, title, poster, description, COALESCE(genres.name, 'none') AS name FROM movies
+  LEFT JOIN movies_genres ON movies.id = movies_genres.movie_id
+  LEFT JOIN genres ON movies_genres.genre_id = genres.id
+  WHERE movies.id = $1`;
+
   const queryParams = [req.params.id];
 
   pool
@@ -68,7 +70,7 @@ router.post("/", (req, res) => {
       // SECOND QUERY ADDS GENRE FOR THAT NEW MOVIE
       pool
         .query(insertMovieGenreQuery, [createdMovieId, req.body.genre_id])
-        .then((result) => {
+        .then(() => {
           //Now that both are done, send back success!
           res.sendStatus(201);
         })
@@ -117,19 +119,56 @@ router.delete("/:id", (req, res) => {
 
 // PUT endpoint for updating title and description
 router.put("/:id", (req, res) => {
-  console.log(
-    "receiving PUT, req.body is",
-    req.body,
-    "req.params is:",
-    req.params
-  );
-  const queryText = `UPDATE movies SET title = $1, description = $2
-                      WHERE id = $3`;
+  const queryText = `UPDATE "movies" SET "title" = $1, "description" = $2
+                      WHERE "id" = $3`;
   const queryParams = [req.body.title, req.body.description, req.params.id];
   pool
     .query(queryText, queryParams)
     .then((result) => {
-      res.sendStatus(204);
+      // once first PUT is complete, make a PUT request to the movies_genres table
+      // first delete rows of previous relationships, then add rows denoting new ones
+      const genreDeleteText = `DELETE FROM movies_genres WHERE movie_id = $1`;
+      const genreDeleteParams = [req.params.id];
+      pool
+        .query(genreDeleteText, genreDeleteParams)
+        .then(() => {
+          // now add rows back based on params
+          let values = [];
+          for (let genreID of req.body.genres) {
+            // prevent null values from being inserted into the values array
+            if (genreID) {
+              values.push([req.params.id, genreID]);
+            }
+          }
+          const genreInsertText = format(
+            `INSERT INTO movies_genres (movie_id, genre_id)
+                                          VALUES %L`,
+            values
+          );
+          // if there are any values to insert, execute another SQL query
+          if (values.length > 0) {
+            pool
+              .query(genreInsertText)
+              .then(() => {
+                res.sendStatus(204);
+              })
+              .catch((err) => {
+                console.log(
+                  "Failed to execute SQL query",
+                  queryText,
+                  " : ",
+                  err
+                );
+                res.sendStatus(500);
+              });
+          } else {
+            res.sendStatus(204);
+          }
+        })
+        .catch((err) => {
+          console.log("Failed to execute SQL query", queryText, " : ", err);
+          res.sendStatus(500);
+        });
     })
     .catch((err) => {
       console.log("Failed to execute SQL query", queryText, " : ", err);
