@@ -19,9 +19,9 @@ router.get("/", (req, res) => {
 // GET endpoint for individual movie
 // also include genres
 router.get("/:id", (req, res) => {
-  const queryText = `SELECT movies.id, title, poster, description, name FROM movies
-  JOIN movies_genres ON movies.id = movies_genres.movie_id
-  JOIN genres ON movies_genres.genre_id = genres.id
+  const queryText = `SELECT movies.id, title, poster, description, COALESCE(genres.name, 'none') AS name FROM movies
+  LEFT JOIN movies_genres ON movies.id = movies_genres.movie_id
+  LEFT JOIN genres ON movies_genres.genre_id = genres.id
   WHERE movies.id = $1`;
 
   const queryParams = [req.params.id];
@@ -70,7 +70,7 @@ router.post("/", (req, res) => {
       // SECOND QUERY ADDS GENRE FOR THAT NEW MOVIE
       pool
         .query(insertMovieGenreQuery, [createdMovieId, req.body.genre_id])
-        .then((result) => {
+        .then(() => {
           //Now that both are done, send back success!
           res.sendStatus(201);
         })
@@ -141,23 +141,38 @@ router.put("/:id", (req, res) => {
           // now add rows back based on params
           let values = [];
           for (let genreID of req.body.genres) {
-            values.push([req.params.id, genreID]);
+            // prevent null values from being inserted into the values array
+            if (genreID) {
+              values.push([req.params.id, genreID]);
+            }
           }
+          console.log("inserting values, values are", values);
           const genreInsertText = format(
             `INSERT INTO movies_genres (movie_id, genre_id)
                                           VALUES %L`,
             values
           );
-
-          pool
-            .query(genreInsertText)
-            .then(() => {
-              res.sendStatus(204);
-            })
-            .catch((err) => {
-              console.log("Failed to execute SQL query", queryText, " : ", err);
-              res.sendStatus(500);
-            });
+          // if there are any values to insert, execute another SQL query
+          if (values.length > 0) {
+            console.log("values to insert, inserting:", values);
+            pool
+              .query(genreInsertText)
+              .then(() => {
+                res.sendStatus(204);
+              })
+              .catch((err) => {
+                console.log(
+                  "Failed to execute SQL query",
+                  queryText,
+                  " : ",
+                  err
+                );
+                res.sendStatus(500);
+              });
+          } else {
+            console.log("did not insert any values");
+            res.sendStatus(204);
+          }
         })
         .catch((err) => {
           console.log("Failed to execute SQL query", queryText, " : ", err);

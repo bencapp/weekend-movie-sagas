@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import { FormControlLabel, Checkbox } from "@mui/material";
@@ -10,10 +10,6 @@ function EditMovie() {
 
   const dispatch = useDispatch();
   const history = useHistory();
-
-  // const [movieTitle, setMovieTitle] = useState();
-  // const [movieDescription, setMovieDescription] = useState();
-  // const [movieGenres, setMovieGenres] = useState();
 
   const movie = useSelector((store) => store.movieToDisplay);
   const genres = useSelector((store) => store.genres);
@@ -35,12 +31,6 @@ function EditMovie() {
         ...movie,
         genres: movie.genres.map((movieGenre) => {
           for (let genre of genres) {
-            console.log(
-              "in for loop, genre is",
-              genre,
-              " and movieGenre is",
-              movieGenre
-            );
             if (genre.name == movieGenre) {
               console.log("found match at id", genre.id);
               return genre.id;
@@ -60,10 +50,12 @@ function EditMovie() {
     history.push(`/movie/${id}`);
   };
 
+  console.log("updating movie, movieBeingUpdated is", movieBeingUpdated);
+
   return (
     <form onSubmit={handleSubmit}>
       <textarea
-        defaultValue={movieBeingUpdated.title}
+        value={movieBeingUpdated.title}
         onChange={(event) =>
           dispatch({
             type: "SET_MOVIE_BEING_UPDATED",
@@ -72,7 +64,7 @@ function EditMovie() {
         }
       ></textarea>
       <textarea
-        defaultValue={movieBeingUpdated.description}
+        value={movieBeingUpdated.description}
         onChange={(event) =>
           dispatch({
             type: "SET_MOVIE_BEING_UPDATED",
@@ -88,11 +80,19 @@ function EditMovie() {
               <Checkbox
                 defaultChecked={movie.genres.includes(genre.name)}
                 onChange={(event) => {
+                  console.log("seeing check change, event is", event);
+                  // boolean for whether it is checked or not: event.target.checked
+
                   dispatch({
                     type: "SET_MOVIE_BEING_UPDATED",
                     payload: {
                       ...movieBeingUpdated,
-                      genres: [...movieBeingUpdated.genres, genre.id],
+                      // if field is checked, add it to the list. if unchecked, remove from list
+                      genres: event.target.checked
+                        ? [...movieBeingUpdated.genres, genre.id]
+                        : movieBeingUpdated.genres.filter(
+                            (movieGenre) => movieGenre != genre.id
+                          ),
                     },
                   });
                 }}
