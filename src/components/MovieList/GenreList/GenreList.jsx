@@ -21,7 +21,7 @@ function GenreList() {
       {genres.map((genre, i, row) => {
         return (
           <>
-            <div className="genre-list-item" key={genre.id}>
+            <div key={genre.id} className="genre-list-item">
               {genre.name}
             </div>
             {i + 1 != row.length && <div className="genre-list-item">|</div>}
