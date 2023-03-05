@@ -115,4 +115,26 @@ router.delete("/:id", (req, res) => {
     });
 });
 
+// PUT endpoint for updating title and description
+router.put("/:id", (req, res) => {
+  console.log(
+    "receiving PUT, req.body is",
+    req.body,
+    "req.params is:",
+    req.params
+  );
+  const queryText = `UPDATE movies SET title = $1, description = $2
+                      WHERE id = $3`;
+  const queryParams = [req.body.title, req.body.description, req.params.id];
+  pool
+    .query(queryText, queryParams)
+    .then((result) => {
+      res.sendStatus(204);
+    })
+    .catch((err) => {
+      console.log("Failed to execute SQL query", queryText, " : ", err);
+      res.sendStatus(500);
+    });
+});
+
 module.exports = router;

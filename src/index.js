@@ -18,6 +18,7 @@ function* rootSaga() {
   yield takeEvery("FETCH_GENRES", fetchGenres);
   yield takeEvery("POST_MOVIE", postMovie);
   yield takeEvery("DELETE_MOVIE", deleteMovie);
+  yield takeEvery("UPDATE_MOVIE", updateMovie);
 }
 
 function* fetchAllMovies() {
@@ -71,6 +72,21 @@ function* deleteMovie(action) {
     yield put({ type: "FETCH_MOVIES" });
   } catch (error) {
     console.log("error in deleteMovie:", error);
+  }
+}
+
+// movie PUT request generator function
+function* updateMovie(action) {
+  try {
+    console.log("in updateMovie, updating at id:", action.payload.id);
+    yield axios.put(`/api/movie/${action.payload.id}`, {
+      title: action.payload.title,
+      description: action.payload.description,
+    });
+    // TODO: CHECK IF NECESSARY
+    yield put({ type: "FETCH_MOVIES" });
+  } catch (error) {
+    console.log("error in updateMovie:", error);
   }
 }
 

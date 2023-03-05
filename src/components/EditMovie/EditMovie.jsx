@@ -32,6 +32,7 @@ function EditMovie() {
       type: "UPDATE_MOVIE",
       payload: { id: id, title: movieTitle, description: movieDescription },
     });
+    history.push(`/movie/${id}`);
   };
 
   return (
