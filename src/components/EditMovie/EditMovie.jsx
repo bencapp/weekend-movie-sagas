@@ -19,11 +19,9 @@ function EditMovie() {
   // include id as part of dependency array so that page will re-render
   // on id change
   useEffect(() => {
-    console.log("in useEffect");
     dispatch({ type: "FETCH_MOVIE", payload: id });
     dispatch({ type: "FETCH_GENRES" });
     // dispatch current movie info to movieBeingUpdated
-    console.log("about to set movie being updated, movie is", movie);
     // dispatch movie with genres represented by their ids
     dispatch({
       type: "SET_MOVIE_BEING_UPDATED",
@@ -32,7 +30,6 @@ function EditMovie() {
         genres: movie.genres.map((movieGenre) => {
           for (let genre of genres) {
             if (genre.name == movieGenre) {
-              console.log("found match at id", genre.id);
               return genre.id;
             }
           }
@@ -42,15 +39,12 @@ function EditMovie() {
   }, []);
 
   const handleSubmit = () => {
-    console.log("submitting movie, movie is:", movieBeingUpdated);
     dispatch({
       type: "UPDATE_MOVIE",
       payload: movieBeingUpdated,
     });
     history.push(`/movie/${id}`);
   };
-
-  console.log("updating movie, movieBeingUpdated is", movieBeingUpdated);
 
   return (
     <form onSubmit={handleSubmit}>

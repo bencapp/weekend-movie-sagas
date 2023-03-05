@@ -119,12 +119,6 @@ router.delete("/:id", (req, res) => {
 
 // PUT endpoint for updating title and description
 router.put("/:id", (req, res) => {
-  console.log(
-    "receiving PUT, req.body is",
-    req.body,
-    "req.params is:",
-    req.params
-  );
   const queryText = `UPDATE "movies" SET "title" = $1, "description" = $2
                       WHERE "id" = $3`;
   const queryParams = [req.body.title, req.body.description, req.params.id];
@@ -146,7 +140,6 @@ router.put("/:id", (req, res) => {
               values.push([req.params.id, genreID]);
             }
           }
-          console.log("inserting values, values are", values);
           const genreInsertText = format(
             `INSERT INTO movies_genres (movie_id, genre_id)
                                           VALUES %L`,
@@ -154,7 +147,6 @@ router.put("/:id", (req, res) => {
           );
           // if there are any values to insert, execute another SQL query
           if (values.length > 0) {
-            console.log("values to insert, inserting:", values);
             pool
               .query(genreInsertText)
               .then(() => {
@@ -170,7 +162,6 @@ router.put("/:id", (req, res) => {
                 res.sendStatus(500);
               });
           } else {
-            console.log("did not insert any values");
             res.sendStatus(204);
           }
         })
