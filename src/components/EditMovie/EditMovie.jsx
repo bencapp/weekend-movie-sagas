@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
+import { FormControlLabel, Checkbox } from "@mui/material";
 
 // movie prop is the movie to edit
 function EditMovie() {
@@ -14,6 +15,7 @@ function EditMovie() {
   const [movieDescription, setMovieDescription] = useState();
 
   const movie = useSelector((store) => store.movieToDisplay);
+  const genres = useSelector((store) => store.genres);
 
   // get individual movie from server based on ID
   // include id as part of dependency array so that page will re-render
@@ -21,6 +23,7 @@ function EditMovie() {
   useEffect(() => {
     console.log("in useEffect");
     dispatch({ type: "FETCH_MOVIE", payload: id });
+    dispatch({ type: "FETCH_GENRES" });
     setMovieTitle(movie.title);
     setMovieDescription(movie.description);
   }, [id]);
@@ -47,6 +50,15 @@ function EditMovie() {
         value={movieDescription}
         onChange={(event) => setMovieDescription(event.target.value)}
       ></textarea>
+      {genres &&
+        genres.map((genre) => (
+          <FormControlLabel
+            key={genre.id}
+            control={<Checkbox />}
+            label={genre.name}
+          />
+        ))}
+      {JSON.stringify(movie.genres)}
       <button type="submit">SUBMIT CHANGES</button>
     </form>
   );
