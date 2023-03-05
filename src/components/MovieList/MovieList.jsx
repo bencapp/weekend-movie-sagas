@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import "./MovieList.css";
 import GenreList from "./GenreList/GenreList";
+import MovieCard from "./MovieCard/MovieCard";
 
 function MovieList() {
   const dispatch = useDispatch();
@@ -46,16 +47,7 @@ function MovieList() {
         <section className="movies">
           {moviesToDisplay &&
             moviesToDisplay.map((movie) => {
-              return (
-                <div key={movie.id}>
-                  <h3>{movie.title}</h3>
-                  <img
-                    onClick={() => history.push(`/movie/${movie.id}`)}
-                    src={movie.poster}
-                    alt={movie.title}
-                  />
-                </div>
-              );
+              return <MovieCard key={movie.id} movie={movie} />;
             })}
         </section>
       </main>

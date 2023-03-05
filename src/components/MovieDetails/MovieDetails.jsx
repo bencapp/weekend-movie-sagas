@@ -2,6 +2,8 @@ import { useParams, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 
+import { Paper } from "@mui/material";
+
 function MovieDetails() {
   // id of movie to display
   const { id } = useParams();
@@ -25,7 +27,7 @@ function MovieDetails() {
     history.push("/");
   };
   return (
-    <>
+    <Paper>
       <h1>{movie.title}</h1>
       <img src={movie.poster}></img>
       <p>{movie.description}</p>
@@ -37,7 +39,7 @@ function MovieDetails() {
       <button onClick={() => history.push("/")}>Back To List</button>
       <button onClick={() => history.push(`/edit/${id}`)}>EDIT MOVIE</button>
       <button onClick={handleDelete}>DELETE MOVIE</button>
-    </>
+    </Paper>
   );
 }
 

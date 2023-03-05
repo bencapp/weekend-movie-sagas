@@ -20,6 +20,10 @@ import postMovie from "./redux/sagas/postMovie";
 import deleteMovie from "./redux/sagas/deleteMovie";
 import updateMovie from "./redux/sagas/updateMovie";
 
+// import material ui
+import theme from "./components/Theme/Theme";
+import { ThemeProvider } from "@mui/material";
+
 // Create the rootSaga generator function
 function* rootSaga() {
   yield takeEvery("FETCH_MOVIES", fetchAllMovies);
@@ -51,8 +55,10 @@ sagaMiddleware.run(rootSaga);
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <Provider store={storeInstance}>
-      <App />
-    </Provider>
+    <ThemeProvider theme={theme}>
+      <Provider store={storeInstance}>
+        <App />
+      </Provider>
+    </ThemeProvider>
   </React.StrictMode>
 );
