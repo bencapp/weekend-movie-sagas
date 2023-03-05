@@ -8,6 +8,9 @@ const theme = createTheme({
     secondary: {
       main: "#292F36",
     },
+    warning: {
+      main: "#C1666B",
+    },
   },
   components: {
     MuiButton: {

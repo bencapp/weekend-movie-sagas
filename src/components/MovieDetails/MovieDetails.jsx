@@ -2,7 +2,8 @@ import { useParams, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 
-import { Paper } from "@mui/material";
+import { Paper, Button, ButtonGroup } from "@mui/material";
+import "./MovieDetails.css";
 
 function MovieDetails() {
   // id of movie to display
@@ -27,18 +28,35 @@ function MovieDetails() {
     history.push("/");
   };
   return (
-    <Paper>
-      <h1>{movie.title}</h1>
-      <img src={movie.poster}></img>
-      <p>{movie.description}</p>
-      <ul>
-        Genres:
-        {movie.genres &&
-          movie.genres.map((genre, i) => <li key={i}>{genre}</li>)}
-      </ul>
-      <button onClick={() => history.push("/")}>Back To List</button>
-      <button onClick={() => history.push(`/edit/${id}`)}>EDIT MOVIE</button>
-      <button onClick={handleDelete}>DELETE MOVIE</button>
+    <Paper className="details-container">
+      <div id="details-image">
+        <h1>{movie.title}</h1>
+        <img src={movie.poster}></img>
+      </div>
+      <p id="details-description">{movie.description}</p>
+      <div id="details-genres">
+        <b>Genres:</b>
+        <div id="details-genre-list">
+          {movie.genres &&
+            movie.genres.map((genre, i, row) => {
+              return (
+                <>
+                  <div className="genre-item" key={i}>
+                    {genre}
+                  </div>
+                  {i + 1 != row.length && <div className="genre-item">|</div>}
+                </>
+              );
+            })}
+        </div>
+      </div>
+      <ButtonGroup id="details-buttons">
+        <Button onClick={() => history.push("/")}>Back To List</Button>
+        <Button onClick={() => history.push(`/edit/${id}`)}>EDIT MOVIE</Button>
+        <Button color="warning" onClick={handleDelete}>
+          DELETE MOVIE
+        </Button>
+      </ButtonGroup>
     </Paper>
   );
 }
