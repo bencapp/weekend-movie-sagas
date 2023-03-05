@@ -1,0 +1,15 @@
+#add-movie-form-container {
+  background-color: #e4dfda;
+  margin: 20px 300px;
+}
+
+#add-movie-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 50px 100px;
+}
+
+#add-movie-form > * {
+  margin-bottom: 20px;
+}

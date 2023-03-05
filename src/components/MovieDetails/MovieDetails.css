@@ -1,0 +1,43 @@
+.details-container {
+  margin: 20px 200px;
+  padding: 20px 40px;
+  background-color: #e4dfda !important;
+  display: grid;
+  grid-template-columns: 200px, 1fr;
+  grid-template-rows: 300px, 1fr;
+  grid-template-areas:
+    "image description"
+    "genres button";
+}
+
+#details-image {
+  grid-area: image;
+}
+
+#details-description {
+  grid-area: description;
+  padding: 10px 50px;
+}
+
+#details-buttons {
+  grid-area: button;
+  height: 37px;
+  width: 391px;
+  place-self: end;
+}
+
+#details-genres {
+  grid-area: genres;
+  padding-top: 10px;
+}
+
+#details-genre-list {
+  padding-top: 10px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.genre-item {
+  margin: 0px 5px;
+}

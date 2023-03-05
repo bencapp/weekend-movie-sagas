@@ -1,7 +1,15 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
-import { FormControlLabel, Checkbox } from "@mui/material";
+import {
+  FormControlLabel,
+  Checkbox,
+  Paper,
+  TextField,
+  Button,
+} from "@mui/material";
+
+import "./EditMovie.css";
 
 // movie prop is the movie to edit
 function EditMovie() {
@@ -47,56 +55,67 @@ function EditMovie() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <textarea
-        value={movieBeingUpdated.title}
-        onChange={(event) =>
-          dispatch({
-            type: "SET_MOVIE_BEING_UPDATED",
-            payload: { ...movieBeingUpdated, title: event.target.value },
-          })
-        }
-      ></textarea>
-      <textarea
-        value={movieBeingUpdated.description}
-        onChange={(event) =>
-          dispatch({
-            type: "SET_MOVIE_BEING_UPDATED",
-            payload: { ...movieBeingUpdated, description: event.target.value },
-          })
-        }
-      ></textarea>
-      {genres &&
-        genres.map((genre) => (
-          <FormControlLabel
-            key={genre.id}
-            control={
-              <Checkbox
-                defaultChecked={movie.genres.includes(genre.name)}
-                onChange={(event) => {
-                  console.log("seeing check change, event is", event);
-                  // boolean for whether it is checked or not: event.target.checked
+    <Paper id="edit-movie-container">
+      <form id="edit-movie-form" onSubmit={handleSubmit}>
+        <b>Edit Movie</b>
+        <TextField
+          label="Title"
+          value={movieBeingUpdated.title}
+          onChange={(event) =>
+            dispatch({
+              type: "SET_MOVIE_BEING_UPDATED",
+              payload: { ...movieBeingUpdated, title: event.target.value },
+            })
+          }
+        ></TextField>
+        <TextField
+          label="Description"
+          value={movieBeingUpdated.description}
+          onChange={(event) =>
+            dispatch({
+              type: "SET_MOVIE_BEING_UPDATED",
+              payload: {
+                ...movieBeingUpdated,
+                description: event.target.value,
+              },
+            })
+          }
+        ></TextField>
+        <b id="genres-header">Genres:</b>
+        <div id="checkboxes-container">
+          {genres &&
+            genres.map((genre) => (
+              <FormControlLabel
+                key={genre.id}
+                control={
+                  <Checkbox
+                    defaultChecked={movie.genres.includes(genre.name)}
+                    onChange={(event) => {
+                      console.log("seeing check change, event is", event);
+                      // boolean for whether it is checked or not: event.target.checked
 
-                  dispatch({
-                    type: "SET_MOVIE_BEING_UPDATED",
-                    payload: {
-                      ...movieBeingUpdated,
-                      // if field is checked, add it to the list. if unchecked, remove from list
-                      genres: event.target.checked
-                        ? [...movieBeingUpdated.genres, genre.id]
-                        : movieBeingUpdated.genres.filter(
-                            (movieGenre) => movieGenre != genre.id
-                          ),
-                    },
-                  });
-                }}
+                      dispatch({
+                        type: "SET_MOVIE_BEING_UPDATED",
+                        payload: {
+                          ...movieBeingUpdated,
+                          // if field is checked, add it to the list. if unchecked, remove from list
+                          genres: event.target.checked
+                            ? [...movieBeingUpdated.genres, genre.id]
+                            : movieBeingUpdated.genres.filter(
+                                (movieGenre) => movieGenre != genre.id
+                              ),
+                        },
+                      });
+                    }}
+                  />
+                }
+                label={genre.name}
               />
-            }
-            label={genre.name}
-          />
-        ))}
-      <button type="submit">SUBMIT CHANGES</button>
-    </form>
+            ))}
+        </div>
+        <Button type="submit">SAVE CHANGES</Button>
+      </form>
+    </Paper>
   );
 }
 
