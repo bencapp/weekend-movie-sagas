@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import "./MovieList.css";
-import GenreList from "../GenreList/GenreList";
+import GenreList from "./GenreList/GenreList";
 
 function MovieList() {
   const dispatch = useDispatch();

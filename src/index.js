@@ -10,6 +10,15 @@ import logger from "redux-logger";
 import createSagaMiddleware from "redux-saga";
 import { takeEvery, put } from "redux-saga/effects";
 import axios from "axios";
+import movies from "./redux/reducers/movies";
+import movieToDisplay from "./redux/reducers/movieToDisplay";
+import genres from "./redux/reducers/genres";
+import fetchAllMovies from "./redux/sagas/fetchAllMovies";
+import fetchMovie from "./redux/sagas/fetchMovie";
+import fetchGenres from "./redux/sagas/fetchGenres";
+import postMovie from "./redux/sagas/postMovie";
+import deleteMovie from "./redux/sagas/deleteMovie";
+import updateMovie from "./redux/sagas/updateMovie";
 
 // Create the rootSaga generator function
 function* rootSaga() {
@@ -21,107 +30,8 @@ function* rootSaga() {
   yield takeEvery("UPDATE_MOVIE", updateMovie);
 }
 
-function* fetchAllMovies() {
-  // get all movies from the DB
-  try {
-    const movies = yield axios.get("/api/movie");
-    yield put({ type: "SET_MOVIES", payload: movies.data });
-  } catch {
-    console.log("get all error");
-  }
-}
-
-// fetch an individual movie based on id
-// action.payload is the movie's id
-function* fetchMovie(action) {
-  try {
-    const movie = yield axios.get(`/api/movie/${action.payload}`);
-    yield put({ type: "SET_CURRENT_MOVIE", payload: movie.data });
-  } catch (error) {
-    console.log("error in fetchMovie:", error);
-  }
-}
-
-// fetch all genres
-function* fetchGenres() {
-  try {
-    const genres = yield axios.get("/api/genre");
-    yield put({ type: "SET_GENRES", payload: genres.data });
-  } catch (error) {
-    console.log("error in fetchGenres:", error);
-  }
-}
-
-// movie POST request: structure required is
-// {title, poster, description, genre_id}
-function* postMovie(action) {
-  try {
-    console.log("in postMovie, sending:", action.payload);
-    yield axios.post("/api/movie", action.payload);
-    yield put({ type: "FETCH_MOVIES" });
-  } catch (error) {
-    console.log("error in postMovie:", error);
-  }
-}
-
-// movie DELETE request: action.payload is the movie id
-function* deleteMovie(action) {
-  try {
-    console.log("in deleteMovie, deleting at id:", action.payload);
-    yield axios.delete(`/api/movie/${action.payload}`);
-    yield put({ type: "FETCH_MOVIES" });
-  } catch (error) {
-    console.log("error in deleteMovie:", error);
-  }
-}
-
-// movie PUT request generator function
-function* updateMovie(action) {
-  try {
-    console.log("in updateMovie, updating at id:", action.payload.id);
-    yield axios.put(`/api/movie/${action.payload.id}`, {
-      title: action.payload.title,
-      description: action.payload.description,
-    });
-    // TODO: CHECK IF NECESSARY
-    yield put({ type: "FETCH_MOVIES" });
-  } catch (error) {
-    console.log("error in updateMovie:", error);
-  }
-}
-
 // Create sagaMiddleware
 const sagaMiddleware = createSagaMiddleware();
-
-// Used to store movies returned from the server
-const movies = (state = [], action) => {
-  switch (action.type) {
-    case "SET_MOVIES":
-      return action.payload;
-    default:
-      return state;
-  }
-};
-
-// Used to store the movie genres
-const genres = (state = [], action) => {
-  switch (action.type) {
-    case "SET_GENRES":
-      return action.payload;
-    default:
-      return state;
-  }
-};
-
-// store the individual movie to display
-const movieToDisplay = (state = {}, action) => {
-  switch (action.type) {
-    case "SET_CURRENT_MOVIE":
-      return action.payload;
-    default:
-      return state;
-  }
-};
 
 // Create one store that all components can use
 const storeInstance = createStore(
