@@ -6,7 +6,7 @@ function GenreList() {
 
   const genres = useSelector((store) => store.genres);
 
-  //
+  // on load, request genre list
   useEffect(() => {
     dispatch({ type: "FETCH_GENRES" });
   }, []);
