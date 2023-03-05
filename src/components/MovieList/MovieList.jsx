@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import "./MovieList.css";
 import GenreList from "./GenreList/GenreList";
+import SearchForm from "./SearchForm/SearchForm";
 
 function MovieList() {
   const dispatch = useDispatch();
@@ -15,6 +16,7 @@ function MovieList() {
 
   return (
     <>
+      <SearchForm />
       <main>
         <h1>MovieList</h1>
         <section className="movies">
