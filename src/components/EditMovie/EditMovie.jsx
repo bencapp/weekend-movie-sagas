@@ -13,6 +13,7 @@ function EditMovie() {
 
   const [movieTitle, setMovieTitle] = useState();
   const [movieDescription, setMovieDescription] = useState();
+  const [movieGenres, setMovieGenres] = useState();
 
   const movie = useSelector((store) => store.movieToDisplay);
   const genres = useSelector((store) => store.genres);
@@ -26,14 +27,20 @@ function EditMovie() {
     dispatch({ type: "FETCH_GENRES" });
     setMovieTitle(movie.title);
     setMovieDescription(movie.description);
+    console.log("about to set movie genres, movie is:", movie);
+    // TODO: enable set movie genres on reload
+    setMovieGenres(movie.genres);
   }, [id]);
-
-  console.log("displaying movie:", movie);
 
   const handleSubmit = () => {
     dispatch({
       type: "UPDATE_MOVIE",
-      payload: { id: id, title: movieTitle, description: movieDescription },
+      payload: {
+        id: id,
+        title: movieTitle,
+        description: movieDescription,
+        genres: movieGenres,
+      },
     });
     history.push(`/movie/${id}`);
   };
@@ -54,11 +61,31 @@ function EditMovie() {
         genres.map((genre) => (
           <FormControlLabel
             key={genre.id}
-            control={<Checkbox />}
+            control={
+              <Checkbox
+                defaultChecked={movie.genres.includes(genre.name)}
+                onChange={(event) => {
+                  console.log(
+                    "changing genres, event.target is",
+                    event.target,
+                    "genre is:",
+                    genre,
+                    "movieGenres is:",
+                    movieGenres
+                  );
+                  movieGenres &&
+                    setMovieGenres(
+                      event.target.checked
+                        ? [...movieGenres, genre.name]
+                        : movieGenres //.filter((genre) => genre != genre.name)
+                    );
+                }}
+              />
+            }
             label={genre.name}
           />
         ))}
-      {JSON.stringify(movie.genres)}
+      {JSON.stringify(movieGenres)}
       <button type="submit">SUBMIT CHANGES</button>
     </form>
   );
