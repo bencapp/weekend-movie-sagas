@@ -1,0 +1,7 @@
+#genre-list-container {
+  background-color: #e4dfda;
+  display: flex;
+  justify-content: space-evenly;
+  padding: 20px;
+  margin: 40px;
+}

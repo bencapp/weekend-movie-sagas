@@ -17,6 +17,7 @@ function SearchForm() {
   return (
     <form id="search-form" onSubmit={handleSubmit}>
       <TextField
+        color="dark"
         size="small"
         value={searchQuery}
         onChange={(event) => setSearchQuery(event.target.value)}
