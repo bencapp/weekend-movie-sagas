@@ -8,7 +8,7 @@ function SearchForm() {
   const handleSubmit = () => {
     // prevent search if input is empty
     if (searchQuery) {
-      history.push(`/${searchQuery}`);
+      history.push(`/search/${searchQuery}`);
     }
   };
 

@@ -16,7 +16,7 @@ function App() {
           <MovieList />
         </Route>
 
-        <Route path="/:query" exact>
+        <Route path="/search/:query" exact>
           <MovieList />
         </Route>
 
