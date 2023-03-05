@@ -8,11 +8,11 @@ import { Provider } from "react-redux";
 import logger from "redux-logger";
 // Import saga middleware
 import createSagaMiddleware from "redux-saga";
-import { takeEvery, put } from "redux-saga/effects";
-import axios from "axios";
+import { takeEvery } from "redux-saga/effects";
 import movies from "./redux/reducers/movies";
 import movieToDisplay from "./redux/reducers/movieToDisplay";
 import genres from "./redux/reducers/genres";
+import movieBeingUpdated from "./redux/reducers/movieBeingUpdated";
 import fetchAllMovies from "./redux/sagas/fetchAllMovies";
 import fetchMovie from "./redux/sagas/fetchMovie";
 import fetchGenres from "./redux/sagas/fetchGenres";
@@ -39,6 +39,7 @@ const storeInstance = createStore(
     movies,
     movieToDisplay,
     genres,
+    movieBeingUpdated,
   }),
   // Add sagaMiddleware to our store
   applyMiddleware(sagaMiddleware, logger)
