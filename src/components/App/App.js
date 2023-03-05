@@ -16,6 +16,10 @@ function App() {
           <MovieList />
         </Route>
 
+        <Route path="/:query" exact>
+          <MovieList />
+        </Route>
+
         {/* Add Movie page */}
         <Route path="/addMovie" exact>
           <MovieForm />

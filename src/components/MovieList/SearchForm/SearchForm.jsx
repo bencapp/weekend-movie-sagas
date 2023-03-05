@@ -6,7 +6,10 @@ function SearchForm() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSubmit = () => {
-    history.push(`/?${searchQuery}`);
+    // prevent search if input is empty
+    if (searchQuery) {
+      history.push(`/${searchQuery}`);
+    }
   };
 
   return (
