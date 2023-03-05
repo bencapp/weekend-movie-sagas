@@ -1,6 +1,6 @@
 .details-container {
   margin: 20px 200px;
-  padding: 20px 40px;
+  padding: 20px 40px 40px;
   background-color: #e4dfda !important;
   display: grid;
   grid-template-columns: 200px, 1fr;
@@ -22,7 +22,7 @@
 #details-buttons {
   grid-area: button;
   height: 37px;
-  width: 391px;
+  width: 369px;
   place-self: end;
 }
 
