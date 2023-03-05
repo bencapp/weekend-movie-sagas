@@ -1,5 +1,7 @@
 import { createTheme } from "@mui/material/styles";
 
+import PlayfairDisplay from "../fonts/PlayfairDisplay-Italic-VariableFont_wght.ttf";
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -26,6 +28,9 @@ const theme = createTheme({
         variant: "contained",
       },
     },
+  },
+  typography: {
+    fontFamily: "Playfair Display, serif",
   },
 });
 
