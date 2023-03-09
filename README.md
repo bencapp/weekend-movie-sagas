@@ -1,5 +1,7 @@
 # Movie Sagas
 
+View the full working application at https://movie-list-sagas.herokuapp.com/
+
 ## Description
 
 _Duration: Weekend Assignment_
